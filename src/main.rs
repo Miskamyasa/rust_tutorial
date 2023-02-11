@@ -5,31 +5,29 @@ use std::cmp::Ordering;
 use std::fs::File;
 use std::io;
 use std::io::{BufRead, BufReader, ErrorKind, Write};
+use std::ops::Add;
+use std::collections::HashMap;
+
 
 fn main() {
-    // Vectors
-    let str3 = String::from("x r t b f g h j k k l");
-    let mut v1: Vec<char> = str3.chars().collect();
+  let mut map = HashMap::new();
+  map.insert(1, 2);
+  map.insert(2, 3);
+  map.insert(3, 4);
 
-    println!("v1: {:?}", v1);
+  // sort HashMap by key
+  let mut keys: Vec<_> = map.keys().collect();
+  keys.sort();
+  for key in keys {
+    println!("{}: {}", key, map[key]);
+  }
 
-    v1.sort();
+  // for (key, value) in &map {
+  //   println!("{}: {}", key, value);
+  // }
 
-    println!("v1: {:?}", v1);
-
-    v1.dedup();
-
-    println!("v1: {:?}", v1);
-
-    let st4: &str = "Random String";
-
-    let mut st5: String = String::from(st4);
-
-    println!("st5: {}", st5);
-
-    let mut st6 = &st4[2..5];
-
-    println!("st6: {}", st6);
-
-
+  //iterate
+  for (key, value) in map.iter() {
+    println!("{}: {}", key, value);
+  }
 }
