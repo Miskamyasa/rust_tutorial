@@ -323,4 +323,94 @@ fn main() {
   }
 
   println!("Rectangle area: {}", Rectangle::new(10.0, 10.0).area());
+
+
+  // iterators
+  let mut arr_it = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  // for
+  for val in arr_it.iter() {
+    println!("{}", val);
+  }
+  // for_each
+  arr_it.into_iter().for_each(|val| println!("{}", val));
+
+  println!("{:?}", arr_it);
+
+  // closures
+  let add_one = |x: i32| x + 1;
+  println!("add_one: {}", add_one(1));
+
+  // more complicated
+  fn use_func<T>(a: i32, b: i32, f: T) -> i32
+    where T: Fn(i32, i32) -> i32 {
+      f(a, b)
+    }
+  let sum = |a: i32, b: i32| a + b;
+  println!("use_func: {}", use_func(1, 2, sum));
+
+
+  // smart pointers
+  struct TreeNode<T> {
+    value: T,
+    left: Option<Box<TreeNode<T>>>,
+    right: Option<Box<TreeNode<T>>>,
+  }
+
+  impl<T> TreeNode<T> {
+    pub fn new(value: T) -> Self {
+      TreeNode {
+        value,
+        left: None,
+        right: None,
+      }
+    }
+    pub fn add_left(&mut self, value: T) {
+      self.left = Some(Box::new(TreeNode::new(value)));
+    }
+    pub fn add_right(&mut self, value: T) {
+      self.right = Some(Box::new(TreeNode::new(value)));
+    }
+
+  }
+
+  let mut root = TreeNode::new(1);
+  root.add_left(4);
+  root.add_right(5);
+
+  pub struct Bank {
+    pub name: String,
+    pub balance: u32,
+  }
+
+  fn withdraw(bank: Arc<Mutex<Bank>>, amount: u32) {
+    let mut bank = bank.lock().unwrap();
+    if bank.balance < amount {
+      println!("Insufficient funds");
+      return;
+    }
+    bank.balance -= amount;
+  }
+
+  fn customer(name: &str, bank: &Arc<Mutex<Bank>>) {
+    println!("{} is trying to withdraw", name);
+    withdraw(bank.clone(), 50);
+    println!("{} has a balance of {}", name, bank.lock().unwrap().balance);
+  }
+
+  let bank = Arc::new(Mutex::new(Bank {
+    name: "Bank of Rust".to_string(),
+    balance: 100,
+  }));
+
+  println!("Bank has a balance of {:?}", bank.lock().unwrap().balance);
+
+  let bank_ref = bank.clone();
+  
+  thread::spawn(
+    move || {
+      customer("Alice", &bank_ref);
+    }
+  ).join().unwrap();
+  
+  println!("Bank has a balance of {:?}", bank.lock().unwrap().balance);
 }

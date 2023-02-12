@@ -18,8 +18,6 @@ fn write_file(file_name: &str, content: &Value) {
 }
 
 fn main() {
-    // let package_json_file = fs::read_to_string("package.json").expect(ERR_STR);
-
     let mut app_json = open_file("app.json");
 
     let mut package_json = open_file("package.json");
