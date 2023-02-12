@@ -260,4 +260,67 @@ fn main() {
   println!("Sum: {}", get_sum_gen(1, 2));
   println!("Sum: {}", get_sum_gen(1.1, 2.22) as f32);
 
+  let mut map = HashMap::new();
+  map.insert(1, 2);
+  map.insert(2, 3);
+  map.insert(3, 4);
+
+  // sort HashMap by key
+  let mut keys: Vec<_> = map.keys().collect();
+  keys.sort();
+  for key in keys {
+    println!("{}: {}", key, map[key]);
+  }
+
+  // for (key, value) in &map {
+  //   println!("{}: {}", key, value);
+  // }
+
+  //iterate
+  for (key, value) in map.iter() {
+    println!("{}: {}", key, value);
+  }
+
+
+  // struct
+  struct User {
+    username: String,
+    email: String,
+    sign_in_count: u64,
+    active: bool,
+  }
+
+  let user: User = User {
+    username: String::from("user"),
+    email: String::from("s@mail.com"),
+    sign_in_count: 1,
+    active: true,
+  };
+
+  println!("User: {}", user.username);
+
+
+  // shape
+  trait Shape {
+    fn new(length: f32, width: f32) -> Self;
+    fn area(&self) -> f32;
+  };
+
+  struct Rectangle {
+    length: f32,
+    width: f32,
+  }
+
+
+  impl Shape for Rectangle {
+    fn new(length: f32, width: f32) -> Self {
+      Rectangle { length, width }
+    }
+
+    fn area(&self) -> f32 {
+      self.length * self.width
+    }
+  }
+
+  println!("Rectangle area: {}", Rectangle::new(10.0, 10.0).area());
 }
