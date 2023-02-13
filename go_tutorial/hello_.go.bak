@@ -1,0 +1,87 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+)
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+type App struct {
+	Expo struct {
+		Version string `json:"version"`
+		Ios     struct {
+			BuildNumber string `json:"buildNumber"` // "1+"
+		}
+		Android struct {
+			VersionCode uint16 `json:"versionCode"` // 1+
+		}
+	}
+}
+
+type PJ struct {
+	Version string `json:"version"`
+}
+
+func main() {
+	appJSON, err := os.ReadFile("app.json")
+	check(err)
+
+	var app App
+	json.Unmarshal(appJSON, &app)
+
+	fmt.Printf(
+		"expo.version: %v, expo.ios.buildNumber: %v, expo.android.versionCode %d \n",
+		app.Expo.Version,
+		app.Expo.Ios.BuildNumber,
+		app.Expo.Android.VersionCode,
+	)
+
+	oldVer := strings.Split(app.Expo.Version, ".")
+	oldPatch, err := strconv.Atoi(oldVer[2])
+	check(err)
+
+	newVer := fmt.Sprintf(
+		"%s.%s.%s",
+		oldVer[0],
+		oldVer[1],
+		strconv.Itoa(1+oldPatch),
+	)
+
+	fmt.Println("newVer: ", newVer)
+
+	app.Expo.Version = newVer
+
+	build := app.Expo.Android.VersionCode + 1
+
+	app.Expo.Android.VersionCode = build
+	app.Expo.Ios.BuildNumber = strconv.Itoa(int(build))
+
+	packageJSON, err := os.ReadFile("package.json")
+	check(err)
+
+	var pj PJ
+	json.Unmarshal(packageJSON, &pj)
+
+	pj.Version = newVer
+
+	appJSON, err = json.MarshalIndent(app, "", "  ")
+	check(err)
+
+	err = os.WriteFile("app.json", append(appJSON), 0644)
+	check(err)
+
+	packageJSON, err = json.MarshalIndent(pj, "", "  ")
+	check(err)
+
+	// err = os.WriteFile("package.json", packageJSON, 0644)
+	// check(err)
+
+}

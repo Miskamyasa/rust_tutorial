@@ -1,0 +1,47 @@
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+func old() {
+	var str string = "Hello, World!"
+	i := []uint8(str)
+	fmt.Printf("str: %s, i: %d, Type: %T \n", str, i, i)
+
+	var someConst float64 = math.Sin(1.15)
+
+	fmt.Printf("someConst: %f, Type: %T \n", someConst, someConst)
+
+	const (
+		a = iota
+		b
+		c
+	)
+
+	fmt.Printf("a: %d, b: %d, c: %d \n", a, b, c)
+
+	const (
+		_ = iota
+		d
+		e
+		f
+	)
+
+	fmt.Printf("d: %d, e: %d, f: %d \n", d, e, f)
+
+	var strings []string = []string{"a", "b", "c"}
+
+	fmt.Println(strings)
+
+	var numbers []int = []int{1, 2, 3}
+
+	for i := 0; i < len(numbers); i++ {
+		fmt.Println(numbers[i])
+	}
+
+	for i, v := range strings {
+		fmt.Println(i, v)
+	}
+}
