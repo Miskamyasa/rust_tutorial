@@ -5,6 +5,11 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[profile.release]
+strip = true  # Automatically strip symbols from the binary.
+lto = true  # Enable link-time optimization.
+panic = "abort" # Disable unwinding.
+
 [dependencies]
 rand = "0.8.5"
 pad = "0.1.6"
